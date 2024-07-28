@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "FootballQuiz",
+    "slug": "FootballQuiz",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}

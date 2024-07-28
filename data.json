@@ -1,0 +1,14 @@
+[
+    {
+        "name": "players_1",
+        "difficulty": "1"
+    },
+    {
+        "name": "players_2",
+        "difficulty": "2"
+    },
+    {
+        "name": "players",
+        "difficulty": "3"
+    }
+]

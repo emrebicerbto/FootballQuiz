@@ -1,0 +1,389 @@
+/*
+
+old quiz screen
+
+
+
+
+
+import { StyleSheet, Text, SafeAreaView, View, FlatList, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
+import { firebase } from '../config';
+import { useRoute } from '@react-navigation/native';
+
+const QuizScreen = () => {
+    const route = useRoute();
+    const selectedCategory = route.params?.selectedCategory;
+    const navigation = useNavigation();
+    const [players, setPlayers] = useState([]); // Declare players state variable
+    useEffect(() => {
+        getPlayers();
+    }, []);
+
+    const getPlayers = async () => {
+        const db = firebase.firestore();
+        const playersRef = db.collection(selectedCategory);
+
+        try {
+            const snapshot = await playersRef.get();
+            const playersData = snapshot.docs.map(doc => doc.data());
+            setPlayers(playersData);
+        } catch (error) {
+            console.error("Error fetching players:", error);
+        }
+    }
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <View
+                style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: 10,
+                }}>
+                <AntDesign name="arrowleft" size={24} color="black" onPress={() => navigation.navigate("Categories")} />
+                <Image source={require('../assets/sampleheader.png')} style={styles.image} />
+                <AntDesign name="closeoutlined" size={24} color="black"/>
+            </View>
+            <FlatList
+                data={players}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                    <View>
+                        <View style={{ alignItems: "center" }}>
+                            <Image source={{ uri: item.photo }} style={styles.playerphoto} />
+                        </View>
+                        <Text>Difficulty: {item.difficulty}</Text>
+                        <FlatList
+                            data={item.options}
+                            keyExtractor={(option, index) => index.toString()}
+                            renderItem={({ item: option }) => <Text>{option}</Text>}
+                        />
+                        <Text>Correct Answer: {item.correctAnswer}</Text>
+                    </View>
+                )}
+            />
+        </SafeAreaView>
+    );
+};
+
+export default QuizScreen;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#63812F',
+      },
+      playerphoto: {
+        height: 300,
+        width: 220,
+      },
+      image: {
+        height: 45,
+        width: 75,
+        alignSelf: "center",
+        backgroundColor:"black"
+      },
+});
+*/
+
+/*
+
+old category screen
+
+
+
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { firebase } from '../config';
+
+const CategoryScreen = () => {
+  const navigation = useNavigation();
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  const getCategories = async () => {
+    const db = firebase.firestore();
+    const categoriesRef = db.collection('categories'); // Replace with your collection name
+
+    try {
+      const snapshot = await categoriesRef.get();
+      const categoriesData = snapshot.docs.map((doc) => doc.data());
+
+      setCategories(categoriesData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const handleCategoryPress = (category) => {
+    // Navigate to the next screen and pass the selected category as a parameter
+    navigation.navigate('NextScreen', { selectedCategory: category });
+  };
+
+  const renderItem = ({ item }) => {
+    return (
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={() => handleCategoryPress(item.name)}>
+        <Text style={styles.itemText}>{item.name}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={categories}
+        keyExtractor={(item) => item.name}
+        renderItem={renderItem}
+        numColumns={2}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+  },
+  itemContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#007AFF',
+    borderRadius: 8,
+    margin: 5,
+    padding: 10,
+    minHeight: 120,
+  },
+  itemText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
+
+export default CategoryScreen;
+
+
+
+
+
+old category screen style
+
+return (
+    <SafeAreaView style={styles.container}>
+    <View style={{ marginTop: 15 }}>      
+      <Image source={require('../assets/sampleheader.png')} style={styles.image} />
+
+      <View style={{ padding: 10 }}>
+
+      <Pressable
+      onPress={() => navigation.navigate("Quiz")}
+        style={styles.startBtn}>
+        <Text style={{color:"#63812F",fontWeight:"600",textAlign:"center"}}>Start Quiz</Text>
+      </Pressable>
+       
+      </View>
+
+    </View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#63812F',
+  },  
+  image: {
+    height: 45,
+    width: 75,
+    alignSelf: "center",
+    backgroundColor:"black"
+  },
+});
+
+*/
+
+
+
+
+
+/*
+
+
+
+IT WORKEDDDDDDDD
+
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, SafeAreaView, View, FlatList, Image, TouchableOpacity, Modal } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
+import { firebase } from '../config';
+import { useRoute } from '@react-navigation/native';
+
+const QuizScreen = () => {
+    const route = useRoute();
+    const selectedCategory = route.params?.selectedCategory;
+    const navigation = useNavigation();
+    const [players, setPlayers] = useState([]); // Declare players state variable
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [showPopup, setShowPopup] = useState(false);
+    const [answerStatus, setAnswerStatus] = useState(null);
+
+    useEffect(() => {
+        getPlayers();
+    }, []);
+
+    const getPlayers = async () => {
+        const db = firebase.firestore();
+        const playersRef = db.collection(selectedCategory);
+
+        try {
+            const snapshot = await playersRef.get();
+            const playersData = snapshot.docs.map(doc => doc.data());
+            setPlayers(playersData);
+        } catch (error) {
+            console.error("Error fetching players:", error);
+        }
+    }
+
+    const handleAnswer = (selectedAnswer) => {
+        const currentQuestion = players[currentQuestionIndex];
+        const correctAnswer = currentQuestion.correctAnswer;
+
+        const isCorrect = selectedAnswer === correctAnswer;
+        setAnswerStatus(isCorrect ? "correct" : "wrong");
+        setShowPopup(true);
+
+        // Move to the next question after a short delay (e.g., 2 seconds)
+        setTimeout(() => {
+            setShowPopup(false);
+            setAnswerStatus(null);
+            setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+        }, 2000);
+    };
+
+    const renderPopup = () => {
+        if (!showPopup) return null;
+
+        return (
+            <Modal animationType="fade" transparent={true} visible={showPopup}>
+                <View style={styles.popupContainer}>
+                    <Text style={styles.popupText}>
+                        {answerStatus === "correct" ? "Correct!" : "Wrong!"}
+                    </Text>
+                </View>
+            </Modal>
+        );
+    };
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <View
+                style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: 10,
+                }}>
+                <AntDesign name="arrowleft" size={24} color="black" onPress={() => navigation.navigate("Categories")} />
+                <Image source={require('../assets/sampleheader.png')} style={styles.image} />
+                <AntDesign name="closeoutlined" size={24} color="black"/>
+            </View>
+            {players.length > 0 && currentQuestionIndex < players.length ? (
+                <View>
+                <Text style={styles.categoryTxt}>Difficulty: {players[currentQuestionIndex].difficulty}</Text>
+                    <View style={{ alignItems: "center" }}>
+                        <Image source={{ uri: players[currentQuestionIndex].photo }} style={styles.playerphoto} />
+                    </View>
+                    <Text style={styles.categoryTxt}>Who is this player?</Text>
+                    <FlatList
+                        data={players[currentQuestionIndex].options}
+                        keyExtractor={(option, index) => index.toString()}
+                        renderItem={({ item: option }) => (
+                            <TouchableOpacity style={styles.answersTouch} onPress={() => handleAnswer(option)}>
+                                <Text style={styles.answersTxt}>{option}</Text>
+                            </TouchableOpacity>
+                        )}/>
+                </View>
+            ) : (
+                <Text style={styles.quizEndText}>Quiz Ended</Text>
+            )}
+            {renderPopup()}
+        </SafeAreaView>
+    );
+};
+
+const styles = StyleSheet.create({
+    // Existing styles...
+
+    container: {
+        flex: 1,
+        backgroundColor: '#63812F',
+      },  
+      image: {
+        height: 45,
+        width: 75,
+        alignSelf: "center",
+        backgroundColor:"black"
+      },
+      playerphoto: {
+        height: 240,
+        width: 160,
+      },
+      answersTouch:{        
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#63812F',
+        borderWidth: 3,
+        borderColor: '#ffffff',
+        borderRadius: 15,
+        margin: 15,
+        padding: 10,
+        minHeight: 60,
+      },
+      answersTxt:{
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+      },
+      categoryTxt: {     
+        margin: 20,   
+        fontSize: 24,
+        fontWeight: "bold",
+        color: "white",
+        alignSelf: "center"
+      },
+    popupContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.7)",
+    },
+    popupText: {
+        fontSize: 24,
+        fontWeight: "bold",
+        color: "white",
+    },
+    quizEndText: {
+        fontSize: 24,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginTop: 20,
+    },
+});
+
+export default QuizScreen;
+*/
